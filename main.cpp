@@ -331,13 +331,36 @@ void floodFill(GLFWwindow* pwnd, double ptX, double ptY, color cur, color initco
 }
 
 void boundaryFill(GLFWwindow* pwnd, double ptX, double ptY, color cur, color boundcolor) {
-	if (!sameColor(polyPoint(ptX, ptY), boundcolor) && !sameColor(polyPoint(ptX, ptY), cur)) {
-
-		setFramebuffer(ptX, ptY, cur.r, cur.g, cur.b);
-		boundaryFill(pwnd, ptX + 1, ptY, cur, boundcolor);
-		boundaryFill(pwnd, ptX - 1, ptY, cur, boundcolor);
-		boundaryFill(pwnd, ptX, ptY + 1, cur, boundcolor);
-		boundaryFill(pwnd, ptX, ptY - 1, cur, boundcolor);
+	if (sameColor(polyPoint(ptX, ptY), boundcolor)) {
+		return;
+	}
+	queue<polyPoint> ptstack;
+	polyPoint firstPt = polyPoint(ptX, ptY);
+	setFramebuffer(firstPt.x, firstPt.y, cur.r, cur.g, cur.b);
+	ptstack.push(firstPt);
+	while (!ptstack.empty()) {
+		polyPoint pt = ptstack.front();
+		ptstack.pop();
+		polyPoint rightPt = polyPoint(pt.x + 1, pt.y);
+		polyPoint leftPt = polyPoint(pt.x - 1, pt.y);
+		polyPoint upPt = polyPoint(pt.x, pt.y + 1);
+		polyPoint downPt = polyPoint(pt.x, pt.y - 1);
+		if (!sameColor(rightPt, boundcolor)) {
+			setFramebuffer(rightPt.x, rightPt.y, cur.r, cur.g, cur.b);
+			ptstack.push(rightPt);
+		}
+		if (!sameColor(leftPt, boundcolor)) {
+			setFramebuffer(leftPt.x, leftPt.y, cur.r, cur.g, cur.b);
+			ptstack.push(leftPt);
+		}
+		if (!sameColor(downPt, boundcolor)) {
+			setFramebuffer(downPt.x, downPt.y, cur.r, cur.g, cur.b);
+			ptstack.push(downPt);
+		}
+		if (!sameColor(upPt, boundcolor)) {
+			setFramebuffer(upPt.x, upPt.y, cur.r, cur.g, cur.b);
+			ptstack.push(upPt);
+		}
 	}
 	return;
 }
