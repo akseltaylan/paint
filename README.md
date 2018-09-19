@@ -24,6 +24,4 @@ B: increment B of current color by 0.05 (max of 1)
 
 Known bugs:
 
--line drawing erases other colors in the canvas
-
--Boundary fill has a chance to stack overflow
+-line drawing erases other objects underneath new lines in canvas
